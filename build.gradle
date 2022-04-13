@@ -1,0 +1,54 @@
+buildscript {
+    ext {
+        groupId = "io.github.syaku"
+        versionName = "1.0.0-SNAPSHOT"
+        junitVersion = "5.8.2"
+        slf4jVersion = "1.7.36"
+        logbackVersion = "1.2.3"
+    }
+
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        mavenCentral()
+    }
+}
+
+wrapper {
+    gradleVersion = "7.3"
+}
+
+apply plugin: "java"
+
+repositories {
+    mavenCentral()
+}
+
+group groupId
+version versionName
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+compileJava.options.encoding = 'UTF-8'
+
+
+dependencies {
+    testImplementation(platform("org.junit:junit-bom:${junitVersion}"))
+    testImplementation('org.junit.jupiter:junit-jupiter')
+
+    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+    implementation "ch.qos.logback:logback-core:${logbackVersion}"
+    implementation ("ch.qos.logback:logback-classic:${logbackVersion}") {
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+        exclude group: 'ch.qos.logback', module: 'logback-core'
+    }
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
